@@ -1,3 +1,15 @@
+.idea
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Exported builds
+/build/
+
+# Generated art candidates; only approved references are kept
+/art/hero/dataset_raw/
+/art/hero/repose/
+/art/poses/
+/art/**/_*.png
+/art/**/_tmp/
+__pycache__/

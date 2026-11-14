@@ -1,0 +1,9 @@
+{
+  "enabledPlugins": {
+    "router@awesome-gamedev-agent-skills": true,
+    "godot@awesome-gamedev-agent-skills": true,
+    "disciplines@awesome-gamedev-agent-skills": true,
+    "genres@awesome-gamedev-agent-skills": true,
+    "workflows@awesome-gamedev-agent-skills": true
+  }
+}
