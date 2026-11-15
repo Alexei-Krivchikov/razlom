@@ -5,13 +5,13 @@ extends Node
 # each must be able to hurt the hero, the roar must trigger at half health and the boss must die
 # to sustained hits.
 
-const PLAYER := preload("res://scenes/Player.tscn")
-const BOSS := preload("res://scenes/enemies/Boss.tscn")
+const PLAYER := preload("res://scenes/hero/Player.tscn")
+const BOSS := preload("res://data/enemies/boss.tres")
 const MAX_FRAMES := 60 * 120
 
 var _frame := 0
 var _player: Player
-var _boss: Enemy
+var _boss: Boss
 var _damage := {}
 var _roared := false
 var _dead := false
@@ -23,8 +23,9 @@ func _ready() -> void:
 	add_child(preload("res://scenes/Arena.tscn").instantiate())
 	_player = PLAYER.instantiate()
 	_player.position = Arena.RECT.get_center() + Vector2(0, 60)
+	_player.input = ScriptedInput.new()
 	add_child(_player)
-	_boss = BOSS.instantiate()
+	_boss = BOSS.spawn()
 	_boss.position = Arena.RECT.get_center() + Vector2(0, -80)
 	add_child(_boss)
 	Events.player_damaged.connect(func(a): _damage[a] = true)
@@ -37,7 +38,7 @@ func _physics_process(_delta: float) -> void:
 	_frame += 1
 	_player.health = _player.max_health
 	if is_instance_valid(_boss):
-		_roared = _roared or _boss.s == _boss.S.ROAR
+		_roared = _roared or _boss.s == Boss.S.ROAR
 		if _frame % 200 == 0:
 			var near := (_frame / 200) % 2 == 0
 			var offset := Vector2.from_angle(randf() * TAU) * (50.0 if near else 260.0)

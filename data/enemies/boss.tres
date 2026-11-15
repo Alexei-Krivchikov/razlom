@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BossData" format=3]
+
+[ext_resource type="Resource" path="res://data/enemies/shark.tres" id="1_06i84"]
+[ext_resource type="Resource" path="res://data/enemies/projectile.tres" id="2_pbh8y"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Boss.tscn" id="3_8tydd"]
+[ext_resource type="Script" path="res://data/BossData.gd" id="4_wi6xe"]
+
+[resource]
+script = ExtResource("4_wi6xe")
+projectile = ExtResource("2_pbh8y")
+minion = ExtResource("1_06i84")
+banner_title = "ПАСТЫРЬ"
+banner_sub = "он ведёт их сквозь разлом"
+hud_name = "ПАСТЫРЬ РАЗЛОМА"
+scene = ExtResource("3_8tydd")
+max_health = 400.0
+speed = 95.0
+radius = 18.0
+knockback_scale = 0.0

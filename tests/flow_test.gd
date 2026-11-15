@@ -11,6 +11,7 @@ var main: Node
 var frames := 0
 var upgrades_seen := 0
 var damage_taken := 0
+var input := ScriptedInput.new()
 
 
 func _ready() -> void:
@@ -21,6 +22,7 @@ func _ready() -> void:
 	GameState.skip_title = true
 	main = load("res://scenes/Main.tscn").instantiate()
 	add_child(main)
+	main.player.input = input
 	Events.boss_died.connect(func(): _finish("victory"))
 	Events.player_died.connect(func(): _finish("defeat"))
 	Events.player_damaged.connect(func(a): damage_taken += a)
@@ -34,14 +36,8 @@ func _physics_process(_delta: float) -> void:
 	if mode != "victory":
 		return
 	main.player.health = main.player.max_health
-	if frames % 6 == 0:
-		Input.action_press("p1_attack")
-	elif frames % 6 == 1:
-		Input.action_release("p1_attack")
-	if frames % 90 == 0:
-		Input.action_press("p1_dash")
-	elif frames % 90 == 1:
-		Input.action_release("p1_dash")
+	input.attack = frames % 6 == 0
+	input.dash = frames % 90 == 0
 	if frames % 20 == 0:
 		for e in get_tree().get_nodes_in_group("enemies"):
 			e.take_hit(25.0, Vector2.RIGHT, false)
@@ -56,8 +52,8 @@ func _finish(result: String) -> void:
 	if result != mode:
 		_fail("expected %s" % mode)
 		return
-	if mode == "victory" and upgrades_seen != GameState.WAVES.size():
-		_fail("expected %d upgrade picks" % GameState.WAVES.size())
+	if mode == "victory" and upgrades_seen != GameState.run.waves.size():
+		_fail("expected %d upgrade picks" % GameState.run.waves.size())
 		return
 	print("PASS")
 	get_tree().quit(0)

@@ -1,0 +1,79 @@
+[gd_resource type="Resource" script_class="RunData" format=3]
+
+[ext_resource type="Resource" path="res://data/enemies/boss.tres" id="1_21snu"]
+[ext_resource type="Script" path="res://data/RunData.gd" id="2_soyk3"]
+[ext_resource type="Script" path="res://data/UpgradeData.gd" id="3_1kwlg"]
+[ext_resource type="Resource" path="res://data/upgrades/steel.tres" id="4_ag3vf"]
+[ext_resource type="Resource" path="res://data/upgrades/breath.tres" id="5_owgr4"]
+[ext_resource type="Resource" path="res://data/upgrades/phase.tres" id="6_damxn"]
+[ext_resource type="Resource" path="res://data/upgrades/shockwave.tres" id="7_v3ot6"]
+[ext_resource type="Script" path="res://data/WaveData.gd" id="8_yru81"]
+[ext_resource type="Script" path="res://data/WaveEntry.gd" id="9_x2nhu"]
+[ext_resource type="Resource" path="res://data/enemies/shark.tres" id="10_gxxfx"]
+[ext_resource type="Resource" path="res://data/enemies/spitter.tres" id="11_mph81"]
+
+[sub_resource type="Resource" id="Resource_ytail"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("10_gxxfx")
+count = 4
+
+[sub_resource type="Resource" id="Resource_ttxfb"]
+script = ExtResource("8_yru81")
+entries = Array[ExtResource("9_x2nhu")]([SubResource("Resource_ytail")])
+
+[sub_resource type="Resource" id="Resource_dshs2"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("10_gxxfx")
+count = 6
+
+[sub_resource type="Resource" id="Resource_6w6i5"]
+script = ExtResource("8_yru81")
+entries = Array[ExtResource("9_x2nhu")]([SubResource("Resource_dshs2")])
+
+[sub_resource type="Resource" id="Resource_unpaj"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("10_gxxfx")
+count = 4
+
+[sub_resource type="Resource" id="Resource_hotpt"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("11_mph81")
+count = 2
+
+[sub_resource type="Resource" id="Resource_meilv"]
+script = ExtResource("8_yru81")
+entries = Array[ExtResource("9_x2nhu")]([SubResource("Resource_unpaj"), SubResource("Resource_hotpt")])
+
+[sub_resource type="Resource" id="Resource_scvy2"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("10_gxxfx")
+count = 8
+
+[sub_resource type="Resource" id="Resource_pkmtj"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("11_mph81")
+count = 2
+
+[sub_resource type="Resource" id="Resource_m5jlv"]
+script = ExtResource("8_yru81")
+entries = Array[ExtResource("9_x2nhu")]([SubResource("Resource_scvy2"), SubResource("Resource_pkmtj")])
+
+[sub_resource type="Resource" id="Resource_v6cl5"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("10_gxxfx")
+count = 6
+
+[sub_resource type="Resource" id="Resource_hwsp1"]
+script = ExtResource("9_x2nhu")
+enemy = ExtResource("11_mph81")
+count = 4
+
+[sub_resource type="Resource" id="Resource_a1bon"]
+script = ExtResource("8_yru81")
+entries = Array[ExtResource("9_x2nhu")]([SubResource("Resource_v6cl5"), SubResource("Resource_hwsp1")])
+
+[resource]
+script = ExtResource("2_soyk3")
+waves = Array[ExtResource("8_yru81")]([SubResource("Resource_ttxfb"), SubResource("Resource_6w6i5"), SubResource("Resource_meilv"), SubResource("Resource_m5jlv"), SubResource("Resource_a1bon")])
+boss = ExtResource("1_21snu")
+upgrades = Array[ExtResource("3_1kwlg")]([ExtResource("4_ag3vf"), ExtResource("5_owgr4"), ExtResource("6_damxn"), ExtResource("7_v3ot6")])

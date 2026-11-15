@@ -1,13 +1,13 @@
 extends CanvasLayer
 
-signal chosen(id: String)
+signal chosen(upgrade: UpgradeData)
 
 const CARD_SIZE := Vector2(170, 150)
 const GAP := 18.0
 # Ignores input for a moment so attack-mashing from the last fight doesn't pick a card blindly.
 const INPUT_DELAY := 30
 
-var options: Array = []
+var options: Array[UpgradeData] = []
 var selected := 0
 var _t := 0
 var _canvas: Control
@@ -23,8 +23,8 @@ func _ready() -> void:
 	hide()
 
 
-func open(ids: Array) -> void:
-	options = ids
+func open(upgrades: Array[UpgradeData]) -> void:
+	options = upgrades
 	selected = 0
 	_t = 0
 	show()
@@ -93,17 +93,16 @@ func _on_draw() -> void:
 	Ui.text(c, Vector2(0, 104), "Волна %d зачищена. Здоровье не восстанавливается." % GameState.wave, 10, Palette.SAND, HORIZONTAL_ALIGNMENT_CENTER, 640)
 
 	for i in options.size():
-		var id: String = options[i]
-		var info: Dictionary = GameState.UPGRADES[id]
+		var u := options[i]
 		var r := _card_rect(i)
 		var sel := i == selected
 		Ui.plate(c, r.grow(2), Palette.MAGENTA if sel else Color(Palette.SAND, 0.25), 14)
 		Ui.plate(c, r, Palette.BG, 14)
 		Ui.text(c, r.position + Vector2(14, 22), str(i + 1), 12, Palette.MAGENTA if sel else Color(Palette.SAND, 0.4))
-		Ui.text(c, r.position + Vector2(0, 52), info.title, 14, Palette.CYAN if sel else Palette.SAND, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
-		Ui.lines(c, r.position + Vector2(0, 78), info.desc, 10, Color(Palette.SAND, 0.85), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
-		var lvl := GameState.level(id)
-		for j in GameState.MAX_STACK:
+		Ui.text(c, r.position + Vector2(0, 52), u.title, 14, Palette.CYAN if sel else Palette.SAND, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		Ui.lines(c, r.position + Vector2(0, 78), u.description, 10, Color(Palette.SAND, 0.85), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		var lvl := GameState.level(u)
+		for j in u.max_level:
 			var pip := Rect2(r.get_center().x - 26 + j * 20, r.end.y - 24, 12, 6)
 			if j < lvl:
 				c.draw_rect(pip, Palette.CYAN)

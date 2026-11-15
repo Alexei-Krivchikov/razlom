@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scenes/Main.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/Arena.tscn" id="2"]
@@ -8,6 +8,8 @@
 [ext_resource type="PackedScene" path="res://ui/GameOver.tscn" id="6"]
 [ext_resource type="PackedScene" path="res://ui/Victory.tscn" id="7"]
 [ext_resource type="Shader" path="res://scenes/screen_fx.gdshader" id="8"]
+[ext_resource type="Script" path="res://scenes/CameraShake.gd" id="9"]
+[ext_resource type="Script" path="res://scenes/WaveSpawner.gd" id="10"]
 
 [sub_resource type="ShaderMaterial" id="mat_fx"]
 shader = ExtResource("8")
@@ -17,11 +19,16 @@ script = ExtResource("1")
 
 [node name="Camera" type="Camera2D" parent="."]
 position = Vector2(320, 180)
+script = ExtResource("9")
 
 [node name="Arena" parent="." instance=ExtResource("2")]
 
 [node name="World" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[node name="WaveSpawner" type="Node" parent="." node_paths=PackedStringArray("world")]
+script = ExtResource("10")
+world = NodePath("../World")
 
 [node name="ScreenFx" type="CanvasLayer" parent="."]
 layer = 5

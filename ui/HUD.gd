@@ -3,7 +3,7 @@ extends CanvasLayer
 const BANNER_FRAMES := 100
 
 var player: Player
-var boss: Enemy
+var boss: Boss
 
 var _canvas: Control
 var _banner := ""
@@ -49,22 +49,23 @@ func _on_draw() -> void:
 		var col := Palette.SAND if _damage_flash > 0 and _damage_flash % 4 < 2 else Palette.CYAN
 		c.draw_rect(Rect2(bar.position, Vector2(w * ratio, bar.size.y)), col)
 		if player.dash_cooldown > 0:
-			var k := float(player.dash_cooldown) / Player.DASH_COOLDOWN
+			var k := float(player.dash_cooldown) / player.dash_cooldown_total
 			c.draw_rect(Rect2(bar.position + Vector2(0, 8), Vector2(w * 0.3 * (1.0 - k), 2)), Color(Palette.CYAN, 0.5))
 		else:
 			c.draw_rect(Rect2(bar.position + Vector2(0, 8), Vector2(w * 0.3, 2)), Palette.CYAN)
 
 	if GameState.wave > 0:
-		var label := "ВОЛНА %d/%d" % [GameState.wave, GameState.WAVES.size()] if GameState.wave <= GameState.WAVES.size() else "ФИНАЛ"
+		var waves := GameState.run.waves.size()
+		var label := "ВОЛНА %d/%d" % [GameState.wave, waves] if GameState.wave <= waves else "ФИНАЛ"
 		Ui.plate(c, Rect2(632 - 120, 8, 120, 22), Palette.MAGENTA)
 		Ui.text(c, Vector2(632 - 120, 24), label, 13, Palette.BG, HORIZONTAL_ALIGNMENT_CENTER, 120)
 
 	if is_instance_valid(boss) and boss.health > 0:
 		var bw := 240.0
 		var x := 320.0 - bw / 2
-		Ui.text(c, Vector2(x, 12 + 8), "ПАСТЫРЬ РАЗЛОМА", 10, Palette.MAGENTA, HORIZONTAL_ALIGNMENT_CENTER, bw, 3)
+		Ui.text(c, Vector2(x, 12 + 8), boss.d.hud_name, 10, Palette.MAGENTA, HORIZONTAL_ALIGNMENT_CENTER, bw, 3)
 		c.draw_rect(Rect2(x, 24, bw, 5), Color(Palette.SAND, 0.12))
-		c.draw_rect(Rect2(x, 24, bw * boss.health / boss.max_health, 5), Palette.MAGENTA)
+		c.draw_rect(Rect2(x, 24, bw * boss.health / boss.d.max_health, 5), Palette.MAGENTA)
 		c.draw_rect(Rect2(x + bw * 0.5, 23, 1, 7), Palette.SAND)
 
 	if _banner_t < BANNER_FRAMES:

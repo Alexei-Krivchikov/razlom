@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="UpgradeData" format=3]
+
+[ext_resource type="Script" path="res://data/UpgradeData.gd" id="1_ks6pv"]
+
+[resource]
+script = ExtResource("1_ks6pv")
+id = "shockwave"
+title = "УДАРНАЯ ВОЛНА"
+description = "Третий удар серии
+бьёт по кругу"
+shockwave = true
+shockwave_radius_bonus = 0.25

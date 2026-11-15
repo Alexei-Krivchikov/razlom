@@ -5,12 +5,13 @@ extends Node
 # one three-hit combo alone must not be enough. Starting inside its reach, the shark is already
 # swinging and light hits can't cancel that, so mashing without a dash must get the hero hit.
 
-const PLAYER := preload("res://scenes/Player.tscn")
-const SHARK := preload("res://scenes/enemies/Shark.tscn")
+const PLAYER := preload("res://scenes/hero/Player.tscn")
+const SHARK := preload("res://data/enemies/shark.tres")
 const MAX_FRAMES := 150
 
 var _frame := 0
 var _player: Player
+var _input := ScriptedInput.new()
 var _shark: Enemy
 var _hits := PackedStringArray()
 var _hurt := false
@@ -26,11 +27,18 @@ func _ready() -> void:
 	add_child(preload("res://scenes/Arena.tscn").instantiate())
 	_player = PLAYER.instantiate()
 	_player.position = Vector2(200, 190)
+	_player.input = _input
 	add_child(_player)
-	_shark = SHARK.instantiate()
+	_shark = SHARK.spawn()
 	_shark.position = _player.position + Vector2(distance, 0)
 	add_child(_shark)
 	Events.player_damaged.connect(func(_a): _hurt = true)
+	_shark.hit.connect(_on_shark_hit)
+
+
+func _on_shark_hit(_strong: bool) -> void:
+	_hp_steps[_shark.health] = true
+	_hits.append("f%d hp%.0f d%.0f" % [_frame, _shark.health, _shark.position.distance_to(_player.position)])
 
 
 func _physics_process(_delta: float) -> void:
@@ -38,13 +46,7 @@ func _physics_process(_delta: float) -> void:
 		GameState.hitstop -= 1
 	_frame += 1
 	_player.facing = Vector2.RIGHT
-	if _frame % 6 == 0:
-		Input.action_press("p1_attack")
-	elif _frame % 6 == 1:
-		Input.action_release("p1_attack")
-	if is_instance_valid(_shark) and _shark.flash == 2 and GameState.hitstop > 0:
-		_hp_steps[_shark.health] = true
-		_hits.append("f%d hp%.0f d%.0f" % [_frame, _shark.health, _shark.position.distance_to(_player.position)])
+	_input.attack = _frame % 6 == 0
 	var dead := not is_instance_valid(_shark) or _shark.health <= 0.0
 	if dead or _frame >= MAX_FRAMES:
 		var expect_hurt := _distance <= 40.0

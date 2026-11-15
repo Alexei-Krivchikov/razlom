@@ -1,19 +1,6 @@
 extends Node
 
-const WAVES := [
-	{"shark": 4, "spitter": 0},
-	{"shark": 6, "spitter": 0},
-	{"shark": 4, "spitter": 2},
-	{"shark": 8, "spitter": 2},
-	{"shark": 6, "spitter": 4},
-]
-const MAX_STACK := 3
-const UPGRADES := {
-	"steel": {"title": "БОЛЬШЕ СТАЛИ", "desc": "Урон всех ударов\n+25%"},
-	"breath": {"title": "ВТОРОЕ ДЫХАНИЕ", "desc": "Макс. здоровье +25\nи полное лечение"},
-	"phase": {"title": "ФАЗОВЫЙ ШАГ", "desc": "Кулдаун рывка −30%\nнеуязвимость +2 кадра"},
-	"shockwave": {"title": "УДАРНАЯ ВОЛНА", "desc": "Третий удар серии\nбьёт по кругу"},
-}
+var run: RunData = load("res://data/run.tres")
 
 var wave := 0
 var upgrades := {}
@@ -31,24 +18,62 @@ func _ready() -> void:
 func reset() -> void:
 	wave = 0
 	upgrades = {}
-	for id in UPGRADES:
-		upgrades[id] = 0
+	for u in run.upgrades:
+		upgrades[u.id] = 0
 	hitstop = 0
 	run_time = 0.0
 
 
-func level(id: String) -> int:
-	return upgrades.get(id, 0)
+func level(u: UpgradeData) -> int:
+	return upgrades.get(u.id, 0)
+
+
+func add_level(u: UpgradeData) -> void:
+	upgrades[u.id] = level(u) + 1
+
+
+func roll_upgrades(count: int) -> Array[UpgradeData]:
+	var pool: Array[UpgradeData] = []
+	pool.assign(run.upgrades.filter(func(u: UpgradeData): return level(u) < u.max_level))
+	pool.shuffle()
+	return pool.slice(0, count)
 
 
 func damage_mult() -> float:
-	return 1.0 + 0.25 * level("steel")
+	var m := 1.0
+	for u in run.upgrades:
+		m += u.damage_bonus * level(u)
+	return m
 
 
-func roll_upgrades(count := 3) -> Array:
-	var pool := UPGRADES.keys().filter(func(id): return level(id) < MAX_STACK)
-	pool.shuffle()
-	return pool.slice(0, count)
+func dash_cooldown_mult() -> float:
+	var m := 1.0
+	for u in run.upgrades:
+		m *= pow(u.dash_cooldown_factor, level(u))
+	return m
+
+
+func dash_invuln_bonus() -> int:
+	var b := 0
+	for u in run.upgrades:
+		b += u.dash_invuln_bonus * level(u)
+	return b
+
+
+func shockwave_level() -> int:
+	var n := 0
+	for u in run.upgrades:
+		if u.shockwave:
+			n += level(u)
+	return n
+
+
+func shockwave_radius_mult() -> float:
+	var m := 1.0
+	for u in run.upgrades:
+		if u.shockwave and level(u) > 1:
+			m += u.shockwave_radius_bonus * (level(u) - 1)
+	return m
 
 
 func freeze(frames: int) -> void:

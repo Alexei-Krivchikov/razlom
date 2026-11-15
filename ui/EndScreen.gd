@@ -49,10 +49,10 @@ func _on_draw() -> void:
 	var secs := int(GameState.run_time)
 	Ui.text(c, Vector2(0, 212), "Время забега  %d:%02d" % [secs / 60, secs % 60], 10, Color(Palette.SAND, 0.7), HORIZONTAL_ALIGNMENT_CENTER, 640)
 	var taken := PackedStringArray()
-	for id in GameState.UPGRADES:
-		var lvl := GameState.level(id)
+	for u in GameState.run.upgrades:
+		var lvl := GameState.level(u)
 		if lvl > 0:
-			taken.append("%s ×%d" % [GameState.UPGRADES[id].title, lvl])
+			taken.append("%s ×%d" % [u.title, lvl])
 	if not taken.is_empty():
 		Ui.text(c, Vector2(0, 230), " · ".join(taken), 9, Color(Palette.CYAN, 0.8), HORIZONTAL_ALIGNMENT_CENTER, 640)
 

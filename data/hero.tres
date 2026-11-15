@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://data/AttackData.gd" id="1_5mb3y"]
+[ext_resource type="Script" path="res://data/HeroData.gd" id="2_vu6gw"]
+
+[sub_resource type="Resource" id="Resource_fe7lk"]
+script = ExtResource("1_5mb3y")
+
+[sub_resource type="Resource" id="Resource_iruux"]
+script = ExtResource("1_5mb3y")
+recovery = 12
+damage = 12.0
+anim = "punch1"
+anim_peak = 2
+
+[sub_resource type="Resource" id="Resource_nn8cs"]
+script = ExtResource("1_5mb3y")
+windup = 10
+active = 6
+recovery = 22
+damage = 20.0
+strong = true
+chain_window = 0
+lunge = 22.0
+anim = "punch2"
+anim_peak = 13
+
+[resource]
+script = ExtResource("2_vu6gw")
+combo = Array[ExtResource("1_5mb3y")]([SubResource("Resource_fe7lk"), SubResource("Resource_iruux"), SubResource("Resource_nn8cs")])

@@ -16,11 +16,11 @@ OUT = ROOT / "sprites/hero"
 HEIGHT = 48
 # Wide enough for the hero lying flat behind the feet in the death clip.
 CANVAS = (112, 60)
-# Godot places this canvas pixel on the hero's feet; Player.gd mirrors it as SPRITE_ANCHOR.
+# Godot places this canvas pixel on the hero's feet; HeroView.gd mirrors it as SPRITE_ANCHOR.
 ANCHOR = (56, 56)
 
 # anim -> (clip folder, clip frame indices), or a list of (clip, frame) pairs stitched from several clips;
-# a stitched animation takes its scale from the first clip. The punch peaks are listed in Player.PUNCH_PEAK.
+# a stitched animation takes its scale from the first clip. The punch peaks are anim_peak in data/hero.tres.
 FRAMES = {
     "idle": ("idle_1", range(16, 32, 2)),
     "walk": ("walk_1", range(9, 22)),

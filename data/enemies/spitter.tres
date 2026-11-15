@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SpitterData" format=3]
+
+[ext_resource type="Resource" path="res://data/enemies/projectile.tres" id="1_p8k33"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/Spitter.tscn" id="2_b7cnj"]
+[ext_resource type="Script" path="res://data/SpitterData.gd" id="3_vtq4t"]
+
+[resource]
+script = ExtResource("3_vtq4t")
+projectile = ExtResource("1_p8k33")
+scene = ExtResource("2_b7cnj")
+max_health = 20.0
+speed = 90.0
+radius = 8.0
+name_one = "плевун"
+name_few = "плевуна"
+name_many = "плевунов"

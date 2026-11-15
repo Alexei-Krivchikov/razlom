@@ -1,15 +1,12 @@
 class_name Enemy
 extends CharacterBody2D
 
-const KNOCKBACK_FRAMES := 10
+signal hit(strong: bool)
+signal died
 
-var max_health := 30.0
+var data: EnemyData
 var health := 30.0
-var speed := 100.0
-var radius := 9.0
-var knockback_scale := 1.0
 
-var flash := 0
 var _knockback := Vector2.ZERO
 var _knockback_left := 0
 
@@ -21,10 +18,10 @@ func _ready() -> void:
 	motion_mode = CharacterBody2D.MOTION_MODE_FLOATING
 	var shape := CollisionShape2D.new()
 	var circle := CircleShape2D.new()
-	circle.radius = radius
+	circle.radius = data.radius
 	shape.shape = circle
 	add_child(shape)
-	health = max_health
+	health = data.max_health
 
 
 func player() -> Player:
@@ -38,10 +35,10 @@ func take_hit(damage: float, dir: Vector2, strong: bool) -> bool:
 	if health <= 0.0:
 		return false
 	health -= damage * damage_taken_mult()
-	flash = 2
-	_knockback = dir * (260.0 if strong else 120.0) * knockback_scale
-	_knockback_left = KNOCKBACK_FRAMES
+	_knockback = dir * (data.knockback_strong if strong else data.knockback_light) * data.knockback_scale
+	_knockback_left = data.knockback_frames
 	_on_hit(strong)
+	hit.emit(strong)
 	if health <= 0.0:
 		die()
 		return true
@@ -50,9 +47,7 @@ func take_hit(damage: float, dir: Vector2, strong: bool) -> bool:
 
 func die() -> void:
 	remove_from_group("enemies")
-	Fx.burst(get_parent(), global_position, Palette.MAGENTA, 18, 160.0, 3.0)
-	Fx.burst(get_parent(), global_position, Palette.RIFT, 10, 240.0, 5.0)
-	Sfx.play("death")
+	died.emit()
 	Events.enemy_died.emit(self)
 	queue_free()
 
@@ -69,21 +64,9 @@ func frozen() -> bool:
 	return GameState.hitstop > 0
 
 
-func tick_common() -> void:
-	flash = maxi(flash - 1, 0)
-
-
 func knockback_velocity() -> Vector2:
 	if _knockback_left <= 0:
 		return Vector2.ZERO
-	var v := _knockback * (float(_knockback_left) / KNOCKBACK_FRAMES)
+	var v := _knockback * (float(_knockback_left) / data.knockback_frames)
 	_knockback_left -= 1
 	return v
-
-
-func _process(_delta: float) -> void:
-	queue_redraw()
-
-
-func body_color(base: Color) -> Color:
-	return Palette.SAND if flash > 0 else base
