@@ -7,9 +7,10 @@
 /build/
 
 # Generated art candidates; only approved references are kept
-/art/hero/dataset_raw/
-/art/hero/repose/
 /art/poses/
 /art/**/_*.png
 /art/**/_tmp/
 __pycache__/
+
+# Wan clips are kept locally; only the frames build_hero.py uses are committed (force-added).
+/art/hero/wan/**
